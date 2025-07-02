@@ -9,7 +9,7 @@ def independentnoise_simulation(code, error_rate, decoders,num_trials,**kwargs):
     import numpy as np
     np.random.seed(0)
     hx = code.hx
-    lz = code.lz
+    lx = code.lx
     p = error_rate
     N = hx.shape[1]
     for decoder in decoders:
@@ -30,13 +30,13 @@ def independentnoise_simulation(code, error_rate, decoders,num_trials,**kwargs):
         for decoder in decoders:
             correction = decoder.decode(syndrome)
             residual_error = (correction + error) % 2
-            flag = (lz @ residual_error % 2).any()
+            flag = (lx @ residual_error % 2).any()
             if flag == 1:
                 error_num[decoder.name] += 1
                 print(f"{decoder.name} {np.nonzero(correction)[0]}, error HW = {np.nonzero(error)[0]}")
     print("logistic qubits", end='    ')
-    for lz_arr in lz:
-        print(f"{np.nonzero(lz_arr)[0]}", end='    ')
+    for lx_arr in lx:
+        print(f"{np.nonzero(lx_arr)[0]}", end='    ')
     print()
     print('-'*10+"decoding simulation results"+'-'*10)
     for decoder in decoders:
@@ -47,11 +47,9 @@ def independentnoise_simulation(code, error_rate, decoders,num_trials,**kwargs):
 from time import perf_counter
 
 
-def measure_noise_simulation(code, error_rate, decoders,num_trials,num_repeat):
+def measure_noise_simulation(hx,lx, error_rate, decoders,num_trials,num_repeat):
     import numpy as np
     np.random.seed(0)
-    hx = code.hx
-    lz = code.lz
     p = error_rate
     measure_p = error_rate
     N = hx.shape[1]
@@ -133,13 +131,13 @@ def measure_noise_simulation(code, error_rate, decoders,num_trials,num_repeat):
                     
             residual_error = (cumulative_error + cumulative_true_error) % 2
             # residual_error[int(len(cumulative_error)/2-1)] = 0
-            flag = (lz @ residual_error % 2).any()
+            flag = (lx @ residual_error % 2).any()
             if flag:
                 error_num[decoder.name] += 1
                 print(f"{decoder.name} {np.nonzero(cumulative_error)[0]}, error HW = {np.nonzero(cumulative_true_error)[0]}")
     print("logistic qubits", end='    ')
-    for lz_arr in lz:
-        print(f"{np.nonzero(lz_arr)[0]}", end='    ')
+    for lx_arr in lx:
+        print(f"{np.nonzero(lx_arr)[0]}", end='    ')
     print()
     print('-'*10+"decoding simulation results"+'-'*10)
     logical_error_rate = {decoder.name: error_num[decoder.name]/num_trials for decoder in decoders}
@@ -191,7 +189,7 @@ def generate_trial_data(num_trials, num_repeat, hx, p, measure_p):
     print(f"Generated {len(trial_data)} trials data")
     return trial_data
 
-def process_trial(args, decoders, hx, lz):
+def process_trial(args, decoders, hx, lx):
     trial_idx, trial = args
     N = hx.shape[1]
     true_errors = trial['true_errors']
@@ -228,7 +226,7 @@ def process_trial(args, decoders, hx, lz):
         
         residual_error = (cumulative_error + cumulative_true_error) % 2
         residual_error[int(len(cumulative_error)/2-1)] = 0
-        flag = (lz @ residual_error % 2).any()
+        flag = (lx @ residual_error % 2).any()
         trial_results[decoder.name] = 1 if flag else 0
         
         if flag:
@@ -238,7 +236,7 @@ def process_trial(args, decoders, hx, lz):
 
 def measure_noise_simulation_parallel(code, error_rate, decoders, num_trials, num_repeat, num_processes=None):
     hx = code.hx
-    lz = code.lz
+    lx = code.lx
     p = error_rate
     measure_p = error_rate
     
@@ -259,7 +257,7 @@ def measure_noise_simulation_parallel(code, error_rate, decoders, num_trials, nu
     partial_func = functools.partial(process_trial, 
                                    decoders=decoders,
                                    hx=hx,
-                                   lz=lz)
+                                   lx=lx)
     
     # Use multiprocessing Pool
     if num_processes is None:
@@ -275,8 +273,8 @@ def measure_noise_simulation_parallel(code, error_rate, decoders, num_trials, nu
     
     # Print logical qubits information
     print("logical qubits", end='    ')
-    for lz_arr in lz:
-        print(f"{np.nonzero(lz_arr)[0]}", end='    ')
+    for lx_arr in lx:
+        print(f"{np.nonzero(lx_arr)[0]}", end='    ')
     print()
     
     # Calculate and print results
@@ -294,7 +292,7 @@ def measure_noise_simulation_parallel(code, error_rate, decoders, num_trials, nu
 
 def measure_noise_simulation_by_trial_data(code, error_rate, decoders,num_trials, num_repeat, trial_data):
     hx = code.hx
-    lz = code.lz
+    lx = code.lx
     
     print("___ Independent Noise Simulation (Parallel) ___")
     
@@ -313,7 +311,7 @@ def measure_noise_simulation_by_trial_data(code, error_rate, decoders,num_trials
     partial_func = functools.partial(process_trial, 
                                    decoders=decoders,
                                    hx=hx,
-                                   lz=lz)
+                                   lx=lx)
     
     results = map(partial_func, args)
     # Aggregate results
@@ -324,8 +322,8 @@ def measure_noise_simulation_by_trial_data(code, error_rate, decoders,num_trials
     
     # Print logical qubits information
     print("logical qubits", end='    ')
-    for lz_arr in lz:
-        print(f"{np.nonzero(lz_arr)[0]}", end='    ')
+    for lx_arr in lx:
+        print(f"{np.nonzero(lx_arr)[0]}", end='    ')
     print()
     
     # Calculate and print results

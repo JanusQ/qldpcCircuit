@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "pybind11>=2.6.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "enumlikelydecoder"
+version = "0.0.1"
+description = "Max likelihood decoder for QLDPC codes"
+authors = [
+    {name = "Debin Xiang", email = "db.xiang@zju.edu.cn"}
+]
+requires-python = ">=3.6"
+dependencies = [
+    "pybind11>=2.6.0"
+] 

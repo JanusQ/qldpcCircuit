@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=42", "wheel"]
+requires = ["setuptools>=42", "wheel", "pybind11>=2.6.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -17,16 +17,17 @@ dependencies = [
     "numpy",
     "z3-solver",
     "ray",
-    "cvxpy"
+    "cvxpy",
+    "pybind11>=2.6.0"
 ]
 
 [project.urls]
 Homepage = "https://janusq.com/"
 Repository = "https://github.com/JanusQ/QECDecoder"
 
-[tool.setuptools]
-packages = ["decoding"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["qldpcdecoding*"]
 
-# Optional: Add if you have command-line tools
-[project.scripts]
-decoding-cli = "decoding.cli:main"
+[tool.setuptools.package-data]
+"*" = ["*.txt", "*.md"] 
