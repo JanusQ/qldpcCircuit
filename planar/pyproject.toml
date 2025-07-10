@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "pybind11>=2.6.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "planar"
+version = "0.1.0"
+description = "A planar decoder for QLDPC codes."
+authors = [
+    { name="Debin Xiang", email="db.xiang@zju.edu.cn" }
+]
+license = { text="GNU GENERAL PUBLIC LICENSE" }
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    "scipy >= 1.11.3",
+    "networkx ~= 3.2.1",
+"numpy ~= 1.26.0",
+"ldpc ~= 0.1.50",
+"stim ~= 1.11.0",
+]
+
+[project.urls]
+Homepage = "https://janusq.com/"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["planar*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.txt", "*.md"] 

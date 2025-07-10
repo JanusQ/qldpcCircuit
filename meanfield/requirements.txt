@@ -1,0 +1,13 @@
+# Core dependencies for the mean-field decoder
+numpy>=1.19.0
+scipy>=1.5.0
+pybind11>=2.6.0
+
+# Optional dependencies for examples and analysis
+matplotlib>=3.3.0
+pytest>=6.0.0
+pytest-benchmark>=3.4.0
+
+# Development dependencies
+setuptools>=45.0.0
+wheel>=0.37.0 

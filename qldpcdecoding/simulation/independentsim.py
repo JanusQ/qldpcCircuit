@@ -56,9 +56,7 @@ def measure_noise_simulation(hx,lx, error_rate, decoders,num_trials,num_repeat):
     print("___ Independent Noise Simulation ___")
     error_num = {decoder.name : 0 for decoder in decoders}
     decodingtime = {decoder.name : [] for decoder in decoders}
-    for decoder in decoders:
-        mat = np.hstack((hx,np.identity(hx.shape[0])))
-        decoder.set_h(mat,[None],error_rate)
+
     
     for i in range(num_trials):
         true_errors = []

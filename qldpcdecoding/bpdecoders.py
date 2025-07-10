@@ -6,11 +6,10 @@ from .timing import timing
 class BPOSD_decoder(Decoder):
     def __init__(self):
         super().__init__("BPOSD")
-    def set_h(self,h,prior,p):
+    def set_h(self,h,prior):
         self.h = h
         self.decoder = bposd_decoder(
             self.h,
-            error_rate=p,
             channel_probs=prior,
             max_iter= self.h.shape[1],
             bp_method="ms",
@@ -27,11 +26,10 @@ class BPOSD_decoder(Decoder):
 class BPOSD0_decoder(Decoder):
     def __init__(self):
         super().__init__("BPOSD-0")
-    def set_h(self,h,prior,p):
+    def set_h(self,h,prior):
         self.h = h
         self.decoder = bposd_decoder(
             self.h,
-            error_rate=p,
             channel_probs=prior,
             max_iter= self.h.shape[1],
             bp_method="ms",
@@ -46,11 +44,10 @@ class BPOSD0_decoder(Decoder):
 class BP_decoder(Decoder):
     def __init__(self):
         super().__init__("BP")
-    def set_h(self,h,prior,p):
+    def set_h(self,h,prior):
         self.h = h
         self.decoder = bp_decoder(
             self.h,
-            error_rate=p,
             channel_probs=prior,
             max_iter= self.h.shape[1],
             bp_method="ms",

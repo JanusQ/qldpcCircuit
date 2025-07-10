@@ -42,15 +42,15 @@ fname = './CODE_' + str(n) + '_' + str(k) + '_' + str(d) + '/result'
 
 
 HdecX = mydata['HdecX'].toarray()
-with open('results/HdecX.txt', 'w') as fp:
-    for row in HdecX:
-        fp.write(','.join(row.astype(str))+'\n')
+# with open('results/HdecX.txt', 'w') as fp:
+#     for row in HdecX:
+#         fp.write(','.join(row.astype(str))+'\n')
     
 HdecZ = mydata['HdecZ'].toarray()
-with open('results/HdecZ.txt', 'w') as fp:
-    for row in HdecZ:
-        fp.write(','.join(map(str, row))+'\n')
-exit()
+# with open('results/HdecZ.txt', 'w') as fp:
+#     for row in HdecZ:
+#         fp.write(','.join(map(str, row))+'\n')
+# exit()
 channel_probsX = mydata['probX']
 channel_probsZ = mydata['probZ']
 lin_order = mydata['lin_order']
