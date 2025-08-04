@@ -587,6 +587,32 @@ def generate_log_antilog_tables(m, primitive_polynomial):
 
     return log_table, antilog_table
 
+def circ(v):
+    """Return a circulant matrix from binary vector v."""
+    n = len(v)
+    return np.stack([np.roll(v, shifts=i) for i in range(n)], dim=0)
+
+
+def generate_bicycle_pcm(n):
+    """
+    Construct a CSS-compatible bicycle qLDPC code's stabilizer PCM.
+    Args:
+        n (int): block size (must be even, final code length is 2n)
+    Returns:
+        g (torch.BoolTensor): stabilizer matrix (shape: 2n x 4n)
+    """
+    assert n % 2 == 0, "n must be even"
+    rng = np.random.default_rng(0)
+    a = np.array(rng.integers(0, 2, size=n), dtype=np.bool)
+
+    C = circ(a)          # n x n
+    CT = C.t()           # n x n
+
+    # CSS form: Hx is pure X; Hz is pure Z
+    Hx = np.hstack([C, CT])  # n x 2n
+    Hz = np.hstack([CT, C])  # n x 2n
+
+    return css_code(Hx, Hz, name_prefix="Bicycle", check_css=True)
 
 def construct_vector(m, log_table, antilog_table):
     """Calculate for every i, the j such that alpha^j=1+alpha^i."""
@@ -686,8 +712,16 @@ def gen_BB_code(N):
     """
     if N == 32:
         bb_code = create_bivariate_bicycle_codes(
-            4, 4, [3], [1, 2], [1, 2], [3]
+            4, 4, [1], [0, 2], [1, 0], [2]
         )  # 72
+    elif N == 18:
+        bb_code = create_bivariate_bicycle_codes(
+            3, 3, [1], [0, 2], [1, 0], [2]
+        )  # 18
+    elif N == 60:
+        bb_code = create_bivariate_bicycle_codes(
+            6, 5, [1], [0, 3], [1, 0], [3]
+        )
     elif N == 72:
         bb_code = create_bivariate_bicycle_codes(
             6, 6, [3], [1, 2], [1, 2], [3]

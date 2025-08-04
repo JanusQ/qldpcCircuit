@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.linalg import block_diag
 from .utils import error_solver, minmax
-from .kacward import KacWardSolution
+from .kacward import KacWardSolution, ExactSolution
 import networkx as nx
 # import time 
 def construct_kac_ward_solution(pcm):
@@ -23,7 +23,12 @@ def construct_kac_ward_solution(pcm):
             else:
                 edges_dict[(edge[0], edge[1])].append(m)
     g = nx.from_edgelist(edges_dict.keys())
-    kwsolution = KacWardSolution(nx.adjacency_matrix(g, nodelist=np.arange(n+1)))
+    adj = nx.adjacency_matrix(g, nodelist=np.arange(n))
+    is_planar, _ = nx.check_planarity(g)
+    if not is_planar:
+        kwsolution = ExactSolution(adj)
+    else:
+        kwsolution = KacWardSolution(nx.adjacency_matrix(g, nodelist=np.arange(n)))
     return kwsolution, edges_dict
 
 class Planar:
@@ -221,3 +226,22 @@ def exact_rep_cir(pcm, operator, error_rates):
 #     log_coset_p = logsumexp(log_ps)
 #     return log_coset_p
 # %%
+if __name__ == '__main__':
+    from qldpcdecoding.codes import gen_HP_ring_code
+    code = gen_HP_ring_code(3,3)
+    hx = code.hx
+    hz = code.hz
+    lx = code.lx
+    lz = code.lz
+    decoder = Planar(hx, hz, lx, lz)
+    p_error = 0.001
+    num_trials = 1000
+    for j in range(num_trials):
+        e = np.random.rand(hx.shape[1]) < p_error
+        s = (hx @ e) % 2
+        s_l = (lz @ e) % 2
+        e_hat = decoder.decode(s, [p_error, p_error, p_error, p_error])
+        print(e_hat)
+        print(e)
+        print(s_l)
+        print(s)

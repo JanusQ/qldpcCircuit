@@ -9,7 +9,7 @@ import numpy as np
 from rich.pretty import pprint
 import ray
 p = 0.005
-css_code = gen_BB_code(72)
+css_code = gen_BB_code(18)
 print(css_code.N)
 print(css_code.hz.sum(axis=0))
 bposddecoder = BPOSD_decoder()
@@ -18,5 +18,5 @@ logicalbpdecoder = LogicalBPDecoder()
 # reshapeddecoder = ReShapeBBDecoder(,css_code.lz,A,B)
 # for windowsize in [2,3,4,5,6,7]:
 #     print(f"windowsize={windowsize}")
-pprint(circuit_level_logical_simulation(css_code,p,[logicalbpdecoder,bposddecoder,bpdecoder],num_trials=1000,num_repeat=6,plot=True))
+pprint(circuit_level_logical_simulation(css_code,p,[logicalbpdecoder,bposddecoder,bpdecoder],num_trials=1000,num_repeat=1,plot=True))
 

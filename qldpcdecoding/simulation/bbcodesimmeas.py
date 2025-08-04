@@ -72,7 +72,6 @@ def build_circuit(code, A_list, B_list, p, num_repeat, z_basis=True, use_both=Fa
             circuit.append("DEPOLARIZE2", [R_data_offset + A1_T[i], Z_check_offset + i], p_after_clifford_depolarization)
             # identity gate on L data
             circuit.append("DEPOLARIZE1", L_data_offset + i, p_before_round_data_depolarization)
-
         # tick
         circuit.append("TICK")
 
@@ -191,6 +190,7 @@ def build_circuit(code, A_list, B_list, p, num_repeat, z_basis=True, use_both=Fa
         circuit.append("R", Z_check_offset + i)
         circuit.append("X_ERROR", X_check_offset + i, p_after_reset_flip_probability)
         circuit.append("X_ERROR", Z_check_offset + i, p_after_reset_flip_probability)
+    ## X check and Z check all has X error
     for i in range(n):
         circuit.append("R" if z_basis else "RX", L_data_offset + i)
         circuit.append("X_ERROR" if z_basis else "Z_ERROR", L_data_offset + i, p_after_reset_flip_probability)

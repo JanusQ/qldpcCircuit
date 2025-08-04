@@ -45,7 +45,7 @@ def build_circuit(code, A_list, B_list, p, num_repeat, z_basis=True, use_both=Fa
     for i in range(n//2):
         detector_repeat_circuit_str += f"DETECTOR rec[{-n//2+i}] rec[{-n-n//2+i}]\n"
     detector_repeat_circuit = stim.Circuit(detector_repeat_circuit_str)
-
+    
     def append_blocks(circuit, repeat=False):
         # Round 1
         if repeat:        

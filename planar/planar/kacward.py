@@ -45,6 +45,16 @@ class KacWardSolution:
         logZ += 0.5*logdet
         return logZ
 
+class ExactSolution:
+    def __init__(self, adj_matrix) -> None:
+        self.adj_matrix = adj_matrix
+        self.n = adj_matrix.shape[0]
+        self.m = adj_matrix.shape[1]
+        binary_configs = np.array(
+            [list(map(int, bin(x)[2:].zfill(self.n))) for x in range(2**self.n)]
+        ) * 2 - 1
+        self.logZ_exact = np.log(np.exp(-np.einsum('ab, bc, ac->a', binary_configs, -adj_matrix, binary_configs)/2).sum())
+        return self.logZ_exact
 
 def logcosh(x):
     return np.abs(x) + np.log(1+np.exp(-2.0*np.abs(x))) - np.log(2.0)
